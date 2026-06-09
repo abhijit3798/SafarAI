@@ -1,18 +1,18 @@
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { NavigationProvider, useNavigation } from './hooks/useNavigation';
 import useTheme from './hooks/useTheme';
 import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 
-// Lazy loaded page components
-const Splash = lazy(() => import('./pages/Splash'));
-const Home = lazy(() => import('./pages/Home'));
-const TripPlanner = lazy(() => import('./pages/TripPlanner'));
-const GeneratedTrip = lazy(() => import('./pages/GeneratedTrip'));
-const TripHistory = lazy(() => import('./pages/TripHistory'));
-const Premium = lazy(() => import('./pages/Premium'));
-const Profile = lazy(() => import('./pages/Profile'));
-const Settings = lazy(() => import('./pages/Settings'));
+// Static loaded page components to stabilize module loading
+import Splash from './pages/Splash';
+import Home from './pages/Home';
+import TripPlanner from './pages/TripPlanner';
+import GeneratedTrip from './pages/GeneratedTrip';
+import TripHistory from './pages/TripHistory';
+import Premium from './pages/Premium';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 
 function AppContent() {
   const { currentPath, navigateTo } = useNavigation();

@@ -9,12 +9,12 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Register PWA Service Worker for offline support (temporarily disabled)
-// if ('serviceWorker' in navigator) {
-//   window.addEventListener('load', () => {
-//     navigator.serviceWorker.register('/sw.js')
-//       .then((reg) => console.log('[PWA] Service Worker registered successfully:', reg.scope))
-//       .catch((err) => console.error('[PWA] Service Worker registration failed:', err));
-//   });
-// }
+// Register PWA Service Worker for offline support in production only
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((reg) => console.log('[PWA] Service Worker registered successfully:', reg.scope))
+      .catch((err) => console.error('[PWA] Service Worker registration failed:', err));
+  });
+}
 

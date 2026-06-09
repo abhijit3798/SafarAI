@@ -30,6 +30,16 @@ export default class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
+      const isPlannerError = 
+        window.location.hash.includes('planner') || 
+        (this.state.error && this.state.error.toString().toLowerCase().includes('planner')) ||
+        (this.state.error && this.state.error.toString().toLowerCase().includes('dynamically imported module'));
+
+      const errorTitle = isPlannerError ? "Planner unavailable" : "Unexpected Application Error";
+      const errorDesc = isPlannerError 
+        ? "The trip planner is currently offline or failed to load. Please try reloading." 
+        : "SafarAI encountered an unexpected issue while rendering this screen.";
+
       return (
         <div 
           style={{
@@ -71,11 +81,11 @@ export default class ErrorBoundary extends Component {
             </div>
 
             <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--text-primary)', margin: '0 0 8px 0' }}>
-              Unexpected Application Error
+              {errorTitle}
             </h3>
             
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: '0 0 20px 0', lineHeight: '1.4' }}>
-              SafarAI encountered an unexpected issue while rendering this screen.
+              {errorDesc}
             </p>
 
             {this.state.error && (
@@ -101,7 +111,7 @@ export default class ErrorBoundary extends Component {
 
             <Button onClick={this.handleReset} variant="primary" style={{ width: '100%', gap: '8px' }}>
               <RefreshCw size={14} />
-              <span>Reload SafarAI</span>
+              <span>{isPlannerError ? "Reload" : "Reload SafarAI"}</span>
             </Button>
           </Card>
         </div>
