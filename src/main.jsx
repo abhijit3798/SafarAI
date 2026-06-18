@@ -3,6 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
+// Clear any stored API keys on startup to ensure completely API-key-free offline execution
+try {
+  localStorage.removeItem('safar_ai_gemini_key');
+  sessionStorage.removeItem('safar_ai_gemini_key');
+} catch (e) {
+  console.warn('[Storage] Failed to clear API key on startup:', e);
+}
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />

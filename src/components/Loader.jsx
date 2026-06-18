@@ -69,7 +69,7 @@ export default function Loader({ onComplete }) {
           Creating Your Safar
         </h3>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-          AI is compiling and cross-referencing real travel routes.
+          SafarAI is compiling and cross-referencing real travel routes.
         </p>
       </div>
 

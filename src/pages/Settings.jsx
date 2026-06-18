@@ -4,33 +4,12 @@ import useTheme from '../hooks/useTheme';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import { Key, Eye, EyeOff, Save, Trash2, Sun, Moon, Info, HelpCircle, Mail, Globe, Check } from 'lucide-react';
+import { Sun, Moon, Info, Mail } from 'lucide-react';
 import { APP_VERSION, SUPPORT_EMAIL } from '../config/constants';
 
 export default function Settings() {
   const { theme, toggleTheme, isDark } = useTheme();
-  const [apiKey, setApiKey] = useState('');
-  const [showKey, setShowKey] = useState(false);
-  const [saveMsg, setSaveMsg] = useState('');
-
-  useEffect(() => {
-    const key = localStorage.getItem('safar_ai_gemini_key') || '';
-    setApiKey(key);
-  }, []);
-
-  const handleSaveKey = () => {
-    if (apiKey.trim()) {
-      if (!apiKey.startsWith('AIzaSy')) {
-        alert("Warning: Gemini API keys typically start with 'AIzaSy'. Make sure your key is formatted correctly.");
-      }
-      localStorage.setItem('safar_ai_gemini_key', apiKey.trim());
-      setSaveMsg("API Key configured!");
-    } else {
-      localStorage.removeItem('safar_ai_gemini_key');
-      setSaveMsg("API Key cleared.");
-    }
-    setTimeout(() => setSaveMsg(''), 3000);
-  };
+  // Settings functionality is simplified for offline-only mode.
 
   const handleClearCache = () => {
     if (window.confirm("CAUTION: This will clear all saved trips, settings, and traveler profiles. Do you want to wipe the local database?")) {
@@ -64,62 +43,7 @@ export default function Settings() {
         </Button>
       </Card>
 
-      {/* Gemini Key Config Card */}
-      <Card glass>
-        <h3 style={{ fontSize: '1.05rem', fontWeight: '700', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Key size={18} style={{ color: 'var(--color-primary-light)' }} />
-          <span>Gemini AI Key <span style={{ fontSize: '0.75rem', fontWeight: 'normal', color: 'var(--text-secondary)', marginLeft: '6px', padding: '2px 6px', borderRadius: '4px', background: 'var(--border-color)' }}>Optional</span></span>
-        </h3>
-        
-        <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '16px', lineHeight: '1.4' }}>
-          An API Key is <strong>optional</strong>. It is only required to enable the premium <strong>Smart AI Planner</strong>. If left blank, SafarAI uses the built-in <strong>Quick Planner</strong>, which automatically generates customized day-wise itineraries, travel tips, transport, and budget recommendations locally without external AI calls.
-        </p>
 
-        <div className="form-group" style={{ marginBottom: '12px' }}>
-          <div className="input-container">
-            <Key size={16} className="input-icon" />
-            <input
-              type={showKey ? 'text' : 'password'}
-              className="form-input"
-              placeholder="AIzaSy..."
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              style={{ fontSize: '0.9rem', paddingRight: '48px', paddingLeft: '42px' }}
-            />
-            <button
-              type="button"
-              onClick={() => setShowKey(!showKey)}
-              style={{ position: 'absolute', right: '14px', color: 'var(--text-secondary)', background: 'none' }}
-            >
-              {showKey ? <EyeOff size={16} /> : <Eye size={16} />}
-            </button>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-          <Button onClick={handleSaveKey} variant="primary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
-            <Save size={14} />
-            <span>{apiKey ? 'Save Key' : 'Clear Key'}</span>
-          </Button>
-
-          <a 
-            href="https://aistudio.google.com/" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: 'var(--color-primary)', fontWeight: '600' }}
-          >
-            <span>Get Free Key</span>
-            <Globe size={12} />
-          </a>
-        </div>
-
-        {saveMsg && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--color-success)', fontSize: '0.8rem', fontWeight: '600', marginTop: '12px' }}>
-            <Check size={14} />
-            <span>{saveMsg}</span>
-          </div>
-        )}
-      </Card>
 
       {/* Info / Support Card */}
       <Card style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

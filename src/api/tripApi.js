@@ -1,4 +1,3 @@
-import { generateTripItinerary } from '../services/gemini';
 import { generateLocalTripPlan } from '../services/localPlanner';
 
 // Helper to simulate network latency

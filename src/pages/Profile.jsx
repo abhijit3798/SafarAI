@@ -160,13 +160,50 @@ export default function Profile() {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', fontWeight: '700' }}>
             <Settings size={16} className="text-secondary" style={{ color: 'var(--color-secondary)' }} />
-            <span>Settings & API Configurations</span>
+            <span>Settings & Preferences</span>
           </div>
           <ChevronRight size={16} style={{ color: 'var(--text-tertiary)' }} />
         </div>
       </Card>
 
-      {/* 5. Theme Settings Card */}
+      {/* 5. Planning Mode Card */}
+      <Card style={{ padding: '16px', borderRadius: 'var(--radius-md)' }}>
+        <h3 style={{ fontSize: '1rem', fontWeight: '800', marginBottom: '12px', color: 'var(--text-primary)' }}>Planning Mode</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            padding: '12px', 
+            borderRadius: 'var(--radius-sm)', 
+            border: '2px solid var(--color-primary)', 
+            background: 'var(--bg-accent)' 
+          }}>
+            <div>
+              <span style={{ fontSize: '0.88rem', fontWeight: '700', color: 'var(--text-primary)', display: 'block' }}>Quick Planner</span>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Generate plans offline instantly using mock templates</span>
+            </div>
+            <Check size={18} style={{ color: 'var(--color-primary)' }} />
+          </div>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            padding: '12px', 
+            borderRadius: 'var(--radius-sm)', 
+            border: '1px dashed var(--border-color)', 
+            opacity: 0.6,
+            background: 'var(--bg-secondary)' 
+          }}>
+            <div>
+              <span style={{ fontSize: '0.88rem', fontWeight: '700', color: 'var(--text-secondary)', display: 'block' }}>Smart AI (Coming Soon)</span>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Live AI model generation</span>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* 6. Theme Settings Card */}
       <Card style={{ padding: '16px', borderRadius: 'var(--radius-md)' }}>
         <h3 style={{ fontSize: '1rem', fontWeight: '800', marginBottom: '12px', color: 'var(--text-primary)' }}>Preferences</h3>
         
