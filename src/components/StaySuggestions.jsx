@@ -88,13 +88,15 @@ export default function StaySuggestions({ stays, duration }) {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: '1px solid var(--border-color)', paddingTop: '12px', marginTop: '4px' }}>
                 <div>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'block' }}>Per Night Rate (Est.)</span>
-                  <span className="stay-price">₹{stay.pricePerNight.toLocaleString('en-IN')}</span>
+                  <span className="stay-price">
+                    {stay.priceUnavailable ? 'Estimated' : `₹${stay.pricePerNight.toLocaleString('en-IN')}`}
+                  </span>
                 </div>
                 
                 <div style={{ textAlign: 'right' }}>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'block' }}>Total stay ({duration} nights) (Est.)</span>
                   <span style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--text-primary)' }}>
-                    ₹{totalCost.toLocaleString('en-IN')}
+                    {stay.priceUnavailable ? 'Estimated' : `₹${totalCost.toLocaleString('en-IN')}`}
                   </span>
                 </div>
               </div>

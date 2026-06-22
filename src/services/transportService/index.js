@@ -24,7 +24,8 @@ export async function getTransportOptions({ source, destination, budgetLevel, tr
       durationHours: 2.16,
       cost: 4600,
       recommendation: `Fly to the nearest regional airport, then take an app cab to ${capDest}.`,
-      isEstimated: true
+      isEstimated: true,
+      priceUnavailable: true
     },
     {
       type: "Train",
@@ -33,7 +34,8 @@ export async function getTransportOptions({ source, destination, budgetLevel, tr
       durationHours: 6.75,
       cost: 1350,
       recommendation: "Highly reliable, includes meals, scenic route. Pre-book early.",
-      isEstimated: true
+      isEstimated: true,
+      priceUnavailable: true
     },
     {
       type: "Bus/Cab",
@@ -42,7 +44,8 @@ export async function getTransportOptions({ source, destination, budgetLevel, tr
       durationHours: 10.25,
       cost: 950,
       recommendation: "Overnight travel option. Economical and saves a hotel night room cost.",
-      isEstimated: true
+      isEstimated: true,
+      priceUnavailable: true
     }
   ];
 
@@ -57,7 +60,8 @@ export async function getTransportOptions({ source, destination, budgetLevel, tr
         durationHours: 8.5,
         cost: 3800,
         recommendation: "Enjoy flexibility, pitstops at highways. Great for groups.",
-        isEstimated: true
+        isEstimated: true,
+        priceUnavailable: true
       },
       ...options
     ];

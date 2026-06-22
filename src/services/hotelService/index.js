@@ -27,7 +27,8 @@ export async function getStays({ destination, budgetLevel, duration, stayType = 
       features: [`Cozy ${typeName} rooms`, "Social Vibe", "Free High-speed WiFi", "Walkable to center"],
       location: "Near Market Center",
       rating: 4.6,
-      isEstimated: true
+      isEstimated: true,
+      priceUnavailable: true
     },
     {
       type: "Moderate",
@@ -36,7 +37,8 @@ export async function getStays({ destination, budgetLevel, duration, stayType = 
       features: ["Complimentary Breakfast", "Free WiFi", `Modern ${typeName} units`, "Room Service"],
       location: "Town Center",
       rating: 4.4,
-      isEstimated: true
+      isEstimated: true,
+      priceUnavailable: true
     },
     {
       type: "Luxury",
@@ -45,7 +47,8 @@ export async function getStays({ destination, budgetLevel, duration, stayType = 
       features: ["Infinity Swimming Pool", "Balcony Scenic Views", "Fine Dining", "Wellness Spa"],
       location: "Scenic Hill Outskirts",
       rating: 4.8,
-      isEstimated: true
+      isEstimated: true,
+      priceUnavailable: true
     }
   ];
 }

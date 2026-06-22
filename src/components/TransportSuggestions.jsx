@@ -62,7 +62,16 @@ export default function TransportSuggestions({ transport, source, destination })
                   <span>{option.type} Route</span>
                 </div>
                 
-                {option.cost > 0 && (
+                {option.priceUnavailable ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: '800', color: 'var(--text-secondary)' }}>
+                      Unknown
+                    </span>
+                    <span style={{ fontSize: '0.6rem', color: 'var(--text-tertiary)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '2px' }}>
+                      Price Unavailable
+                    </span>
+                  </div>
+                ) : option.cost > 0 ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                     <span style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--color-success)' }}>
                       ₹{option.cost.toLocaleString('en-IN')} <span style={{ fontSize: '0.75rem', fontWeight: 'normal', color: 'var(--text-secondary)' }}>/ ticket</span>
@@ -71,7 +80,7 @@ export default function TransportSuggestions({ transport, source, destination })
                       Estimated Price
                     </span>
                   </div>
-                )}
+                ) : null}
               </div>
 
               {/* Title & Duration */}

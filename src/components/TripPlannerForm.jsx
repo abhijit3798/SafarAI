@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MapPin, Calendar, Users, Plane, Home, Heart, Compass, DollarSign, Sliders, ArrowLeft, ArrowRight, Check, Sparkles, AlertTriangle, Pencil } from 'lucide-react';
 import Card from './Card';
 import Button from './Button';
+import { formatINR } from '../utils/currency';
 
 const POPULAR_SOURCES = ['Delhi', 'Mumbai', 'Bangalore', 'Kolkata', 'Pune'];
 const POPULAR_DESTINATIONS = ['Goa', 'Jaipur', 'Kerala', 'Leh Ladakh', 'Manali'];
@@ -62,6 +63,7 @@ const INTERESTS = [
 export default function TripPlannerForm({ initialDestination = '', initialVibe = '', initialSearchParams = null, onSubmit, loading = false }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [validationErrors, setValidationErrors] = useState({});
+  const [budgetFocused, setBudgetFocused] = useState(false);
 
   // Core Form States
   const [formData, setFormData] = useState({
@@ -158,7 +160,7 @@ export default function TripPlannerForm({ initialDestination = '', initialVibe =
       delete errors.days;
       if (!formData.source || !formData.source.trim()) errors.source = "Starting location is required.";
       if (!formData.destination || !formData.destination.trim()) errors.destination = "Destination (India) is required.";
-      if (formData.days < 1 || formData.days > 10) errors.days = "Duration must be between 1 and 10 days.";
+      if (!formData.days || formData.days < 1 || formData.days > 31) errors.days = "Duration must be between 1 and 31 days.";
     }
     if (step === 2) {
       delete errors.travelPref;
@@ -167,7 +169,9 @@ export default function TripPlannerForm({ initialDestination = '', initialVibe =
     if (step === 6) {
       delete errors.totalBudget;
       delete errors.budgetSplit;
-      if (formData.totalBudget <= 0) errors.totalBudget = "Please enter a valid budget amount.";
+      if (!formData.totalBudget || formData.totalBudget <= 0) {
+        errors.totalBudget = "Please enter total budget.";
+      }
       const totalSplit = Object.values(formData.budgetSplit).reduce((a, b) => a + b, 0);
       if (totalSplit !== 100) {
         errors.budgetSplit = `Budget splits must sum to 100% (currently ${totalSplit}%).`;
@@ -198,17 +202,17 @@ export default function TripPlannerForm({ initialDestination = '', initialVibe =
     const errors = {};
     if (!formData.source || !formData.source.trim()) errors.source = "Starting location is required.";
     if (!formData.destination || !formData.destination.trim()) errors.destination = "Destination (India) is required.";
-    if (formData.days < 1 || formData.days > 10) errors.days = "Duration must be between 1 and 10 days.";
+    if (!formData.days || formData.days < 1 || formData.days > 31) errors.days = "Duration must be between 1 and 31 days.";
     if (!formData.travelPref) errors.travelPref = "Travel Mode is required.";
     
-    if (formData.totalBudget <= 0) errors.totalBudget = "Please enter a valid budget amount.";
+    if (!formData.totalBudget || formData.totalBudget <= 0) errors.totalBudget = "Please enter total budget.";
     const totalSplit = Object.values(formData.budgetSplit).reduce((a, b) => a + b, 0);
     if (totalSplit !== 100) {
       errors.budgetSplit = `Budget splits must sum to 100% (currently ${totalSplit}%).`;
     }
-
+ 
     setValidationErrors(errors);
-
+ 
     if (Object.keys(errors).length > 0) {
       // Direct user to the first step that contains validation failures
       if (errors.source || errors.destination || errors.days) {
@@ -220,7 +224,7 @@ export default function TripPlannerForm({ initialDestination = '', initialVibe =
       }
       return;
     }
-
+ 
     onSubmit(formData);
   };
 
@@ -412,18 +416,48 @@ export default function TripPlannerForm({ initialDestination = '', initialVibe =
                   <button
                     type="button"
                     className="btn-icon tap-scale"
-                    onClick={() => adjustCounter('days', -1, 1, 10)}
+                    onClick={() => adjustCounter('days', -1, 1, 31)}
                     style={{ width: '32px', height: '32px' }}
                   >
                     -
                   </button>
-                  <span style={{ fontSize: '1rem', fontWeight: '800', minWidth: '20px', textAlign: 'center' }}>
-                    {formData.days}
-                  </span>
+                  <input
+                    type="number"
+                    value={formData.days}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value, 10);
+                      handleInputChange('days', isNaN(val) ? '' : val);
+                    }}
+                    onBlur={() => {
+                      let val = parseInt(formData.days, 10);
+                      if (isNaN(val) || val < 1) val = 1;
+                      if (val > 31) val = 31;
+                      handleInputChange('days', val);
+                      setValidationErrors(prev => {
+                        const next = { ...prev };
+                        delete next.days;
+                        return next;
+                      });
+                    }}
+                    style={{
+                      width: '50px',
+                      height: '32px',
+                      textAlign: 'center',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
+                      color: 'var(--text-primary)',
+                      borderRadius: 'var(--radius-sm)',
+                      fontWeight: '800',
+                      fontSize: '1rem',
+                      outline: 'none',
+                      padding: '0 4px',
+                      MozAppearance: 'textfield'
+                    }}
+                  />
                   <button
                     type="button"
                     className="btn-icon tap-scale"
-                    onClick={() => adjustCounter('days', 1, 1, 10)}
+                    onClick={() => adjustCounter('days', 1, 1, 31)}
                     style={{ width: '32px', height: '32px' }}
                   >
                     +
@@ -761,14 +795,37 @@ export default function TripPlannerForm({ initialDestination = '', initialVibe =
             <div className="form-group">
               <label className="form-label" style={{ fontSize: '0.72rem' }}>Total Budget (INR)</label>
               <div className="input-container">
-                <DollarSign size={14} className="input-icon" />
+                <span className="input-icon" style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-tertiary)', left: '16px', position: 'absolute', pointerEvents: 'none' }}>₹</span>
                 <input
-                  type="number"
+                  type="text"
                   className="form-input"
-                  placeholder="E.g. 25000"
-                  value={formData.totalBudget}
-                  onChange={(e) => handleInputChange('totalBudget', Math.max(0, parseInt(e.target.value) || 0))}
-                  style={{ borderColor: validationErrors.totalBudget ? 'var(--color-accent)' : 'var(--border-color)', borderRadius: 'var(--radius-sm)' }}
+                  placeholder={budgetFocused ? "" : "Enter total budget"}
+                  value={budgetFocused 
+                    ? (formData.totalBudget === 0 ? '' : String(formData.totalBudget)) 
+                    : (formData.totalBudget ? formatINR(formData.totalBudget) : '')}
+                  onFocus={() => setBudgetFocused(true)}
+                  onBlur={() => {
+                    setBudgetFocused(false);
+                    if (!formData.totalBudget || formData.totalBudget <= 0) {
+                      setValidationErrors(prev => ({ ...prev, totalBudget: "Please enter total budget." }));
+                    } else {
+                      setValidationErrors(prev => {
+                        const next = { ...prev };
+                        delete next.totalBudget;
+                        return next;
+                      });
+                    }
+                  }}
+                  onChange={(e) => {
+                    const rawVal = e.target.value.replace(/[^0-9]/g, '');
+                    const val = rawVal === '' ? 0 : parseInt(rawVal, 10);
+                    handleInputChange('totalBudget', val);
+                  }}
+                  style={{ 
+                    paddingLeft: '32px',
+                    borderColor: validationErrors.totalBudget ? 'var(--color-accent)' : 'var(--border-color)', 
+                    borderRadius: 'var(--radius-sm)' 
+                  }}
                 />
               </div>
               {validationErrors.totalBudget && (

@@ -2,16 +2,14 @@ import React, { useState, useEffect } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useNavigation } from '../hooks/useNavigation';
 import usePWA from '../hooks/usePWA';
-import useTheme from '../hooks/useTheme';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import BottomSheetSelector from '../components/BottomSheetSelector';
-import { User, Award, Settings, Bookmark, Crown, ChevronRight, Check, Compass, Sun, Moon } from 'lucide-react';
+import { User, Award, Settings, Bookmark, Crown, ChevronRight, Check } from 'lucide-react';
 
 export default function Profile() {
   const { navigateTo } = useNavigation();
   const { isInstallable, triggerInstall } = usePWA();
-  const { theme, toggleTheme } = useTheme();
   const [savedTrips] = useLocalStorage('safar_ai_saved_trips', []);
   const [createdCount] = useLocalStorage('safar_ai_created_count', 0);
   const [isPremium] = useLocalStorage('safar_ai_premium_status', false);
@@ -203,27 +201,6 @@ export default function Profile() {
         </div>
       </Card>
 
-      {/* 6. Theme Settings Card */}
-      <Card style={{ padding: '16px', borderRadius: 'var(--radius-md)' }}>
-        <h3 style={{ fontSize: '1rem', fontWeight: '800', marginBottom: '12px', color: 'var(--text-primary)' }}>Preferences</h3>
-        
-        {/* iOS Theme Switch */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 0' }}>
-          <div>
-            <span style={{ fontSize: '0.88rem', fontWeight: '700', color: 'var(--text-primary)', display: 'block' }}>Dark Theme</span>
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Reduce glare and conserve mobile battery</span>
-          </div>
-          <label className="ios-switch-label">
-            <input 
-              type="checkbox" 
-              className="ios-switch-input" 
-              checked={theme === 'dark'} 
-              onChange={toggleTheme} 
-            />
-            <span className="ios-switch-slider"></span>
-          </label>
-        </div>
-      </Card>
 
       {/* 6. Travel Preferences Custom Form */}
       <Card glass style={{ padding: '16px', borderRadius: 'var(--radius-md)' }}>

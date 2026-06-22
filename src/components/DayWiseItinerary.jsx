@@ -101,7 +101,7 @@ export default function DayWiseItinerary({ itinerary }) {
                 {/* Footer details */}
                 <div className="activity-footer">
                   <span className="activity-cost">
-                    {act.cost === 0 ? 'Free Entry' : `Est. ₹${act.cost}`}
+                    {act.priceUnavailable ? 'Data unavailable' : act.cost === 0 ? 'Free Entry' : `Est. ₹${act.cost}`}
                   </span>
                   
                   {act.tip && (

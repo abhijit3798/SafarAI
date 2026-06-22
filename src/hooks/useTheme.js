@@ -1,25 +1,54 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useLocalStorage from './useLocalStorage';
 
 /**
- * Custom hook for managing App theme modes (light / dark).
+ * Custom hook for managing App theme modes (System / Light / Dark).
  * Automatically updates document DOM element on state updates.
  */
 export default function useTheme() {
-  const [theme, setTheme] = useLocalStorage('safar_ai_theme', 'dark'); // Default to dark for premium styling
+  const [themeMode, setThemeMode] = useLocalStorage('safar_ai_theme_mode', 'system');
+  const [resolvedTheme, setResolvedTheme] = useState('dark'); // Default fallback to dark
 
   useEffect(() => {
-    // Apply theme attribute to document element
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const updateTheme = () => {
+      let activeTheme = 'dark';
+      if (themeMode === 'system') {
+        activeTheme = mediaQuery.matches ? 'dark' : 'light';
+      } else {
+        activeTheme = themeMode;
+      }
+      setResolvedTheme(activeTheme);
+      document.documentElement.setAttribute('data-theme', activeTheme);
+    };
+
+    updateTheme();
+
+    // Listen to OS theme changes if theme mode is system
+    const listener = () => {
+      if (themeMode === 'system') {
+        updateTheme();
+      }
+    };
+
+    mediaQuery.addEventListener('change', listener);
+    return () => mediaQuery.removeEventListener('change', listener);
+  }, [themeMode]);
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    setThemeMode((prevMode) => {
+      if (prevMode === 'system') return 'light';
+      return prevMode === 'light' ? 'dark' : 'light';
+    });
   };
 
   return {
-    theme,
+    themeMode,
+    setThemeMode,
+    theme: resolvedTheme,
     toggleTheme,
-    isDark: theme === 'dark'
+    isDark: resolvedTheme === 'dark'
   };
 }
+

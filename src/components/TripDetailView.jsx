@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   ArrowLeft, Bookmark, BookmarkCheck, Calendar, MapPin, Share2, 
-  RefreshCw, Award, Compass, Lightbulb, Download, Sparkles, Plane, Home, DollarSign, ChevronDown, ChevronUp, Check, Pencil
+  RefreshCw, Award, Compass, Lightbulb, Download, Sparkles, Plane, Home, DollarSign, ChevronDown, ChevronUp, Check, Pencil, Info
 } from 'lucide-react';
 import DayWiseItinerary from './DayWiseItinerary';
 import StaySuggestions from './StaySuggestions';
@@ -197,7 +197,7 @@ export default function TripDetailView({
           {tripData.destination}
         </h2>
 
-        <div style={{ display: 'flex', gap: '16px', fontSize: '0.82rem', color: '#f1f5f9', textShadow: '0 1px 2px rgba(0,0,0,0.6)' }}>
+        <div style={{ display: 'flex', gap: '16px', fontSize: '0.82rem', color: '#f1f5f9', textShadow: '0 1px 2px rgba(0,0,0,0.6)', flexWrap: 'wrap' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <MapPin size={12} />
             <span>From {tripData.source}</span>
@@ -205,6 +205,10 @@ export default function TripDetailView({
           <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <Calendar size={12} />
             <span>{tripData.duration} Days</span>
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Info size={12} />
+            <span>Last Updated: {tripData.createdDate ? new Date(tripData.createdDate).toLocaleDateString('en-IN') : new Date().toLocaleDateString('en-IN')}</span>
           </span>
         </div>
       </div>
@@ -277,9 +281,32 @@ export default function TripDetailView({
 
       {/* 4. DAY PLAN CARD */}
       <Card style={{ padding: '20px', borderRadius: 'var(--radius-lg)', borderColor: 'var(--border-color)', boxShadow: 'var(--shadow-md)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-          <Calendar size={20} style={{ color: 'var(--color-primary)' }} />
-          <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'var(--text-primary)' }}>Day Wise Itinerary</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Calendar size={20} style={{ color: 'var(--color-primary)' }} />
+            <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'var(--text-primary)', margin: 0 }}>Day Wise Itinerary</h3>
+          </div>
+          {onGenerateAgain && (
+            <button 
+              onClick={onGenerateAgain}
+              className="stay-feature-tag tap-scale"
+              style={{ 
+                padding: '4px 10px', 
+                fontSize: '0.7rem', 
+                gap: '4px',
+                borderColor: 'var(--color-primary)',
+                color: 'var(--color-primary)',
+                fontWeight: '700',
+                background: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }}
+            >
+              <RefreshCw size={10} />
+              <span>Regenerate Itinerary</span>
+            </button>
+          )}
         </div>
         <DayWiseItinerary itinerary={tripData.itinerary} />
       </Card>

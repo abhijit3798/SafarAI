@@ -46,7 +46,7 @@ export const generateLocalTripPlan = async (params) => {
   const capDest = capitalize(destination);
   const capSource = capitalize(source);
 
-  const duration = Math.min(10, Math.max(1, parseInt(days) || 4));
+  const duration = Math.min(31, Math.max(1, parseInt(days) || 4));
 
   // 1. MATCH PREDEFINED MOCK DATA FIRST
   const matchedKey = Object.keys(mockTripsData).find(key => 
@@ -57,8 +57,30 @@ export const generateLocalTripPlan = async (params) => {
     const baseMock = JSON.parse(JSON.stringify(mockTripsData[matchedKey]));
     baseMock.source = capSource;
     baseMock.destination = capDest;
-    baseMock.duration = Math.min(duration, baseMock.itinerary.length);
-    baseMock.itinerary = baseMock.itinerary.slice(0, baseMock.duration);
+    baseMock.duration = duration;
+
+    const mockDays = baseMock.itinerary || [];
+    const finalItinerary = [...mockDays];
+
+    // Append "More itinerary coming soon" for any extra days requested
+    for (let d = mockDays.length + 1; d <= duration; d++) {
+      finalItinerary.push({
+        day: d,
+        theme: "More itinerary coming soon",
+        activities: [
+          {
+            time: "Day Schedule",
+            title: "More itinerary coming soon",
+            description: `We are currently expanding our expert-curated paths for ${capDest}. Stay tuned!`,
+            cost: 0,
+            tip: "Check back later.",
+            priceUnavailable: true
+          }
+        ]
+      });
+    }
+    
+    baseMock.itinerary = finalItinerary.slice(0, duration);
     
     // Scale budget estimates matching the duration ratio
     const ratio = baseMock.duration / mockTripsData[matchedKey].duration;
@@ -106,7 +128,14 @@ export const generateLocalTripPlan = async (params) => {
   // Query each domain service independently to keep it clean and extensible
   const stays = await getStays({ destination: capDest, budgetLevel, duration, stayType });
   const transport = await getTransportOptions({ source: capSource, destination: capDest, budgetLevel, travelPref, optimization });
-  const itinerary = await getItinerary({ destination: capDest, duration, vibe: interests.join(', ') || 'Leisure' });
+  const itinerary = await getItinerary({
+    destination: capDest,
+    duration,
+    vibe: interests.join(', ') || 'Leisure',
+    tripStyle,
+    budget: totalBudget,
+    travelMode: travelPref
+  });
   const { budgetEstimates, budgetBreakdown } = await calculateBudget({ stays, transport, duration, budgetLevel });
 
   return {

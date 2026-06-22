@@ -189,41 +189,30 @@ const ACTIVITY_POOLS = {
  * @param {string} params.destination
  * @param {number} params.duration
  * @param {string} params.vibe
+ * @param {string} [params.tripStyle]
+ * @param {number} [params.budget]
+ * @param {string} [params.travelMode]
  * @returns {Promise<Array>} day-wise itinerary list
  */
-export async function getItinerary({ destination, duration, vibe }) {
+export async function getItinerary({ destination, duration, vibe, tripStyle, budget, travelMode }) {
   const capDest = destination.charAt(0).toUpperCase() + destination.slice(1);
-  let activityCategory = "Leisure";
-  if (vibe.toLowerCase().includes("adventure")) activityCategory = "Adventure";
-  else if (vibe.toLowerCase().includes("cultural") || vibe.toLowerCase().includes("culture")) activityCategory = "Cultural";
-  else if (vibe.toLowerCase().includes("spiritual")) activityCategory = "Spiritual";
-
-  const pool = ACTIVITY_POOLS[activityCategory] || ACTIVITY_POOLS.Leisure;
   const itinerary = [];
 
+  // For any custom destinations where data is unavailable, return placeholder days
   for (let d = 1; d <= duration; d++) {
-    const dayTheme = d === 1 
-      ? `Arrival & City Introduction` 
-      : d === duration 
-        ? `Souvenirs & Departure` 
-        : `${activityCategory} Explorer Route`;
-
-    const mIdx = ((d - 1) * 3) % pool.length;
-    const aIdx = ((d - 1) * 3 + 1) % pool.length;
-    const eIdx = ((d - 1) * 3 + 2) % pool.length;
-
-    const morningAct = { ...pool[mIdx], time: "Morning" };
-    const afternoonAct = { ...pool[aIdx], time: "Afternoon" };
-    const eveningAct = { ...pool[eIdx], time: "Evening" };
-
-    morningAct.description = morningAct.description.replace("[Dest]", capDest);
-    afternoonAct.description = afternoonAct.description.replace("[Dest]", capDest);
-    eveningAct.description = eveningAct.description.replace("[Dest]", capDest);
-
     itinerary.push({
       day: d,
-      theme: dayTheme,
-      activities: [morningAct, afternoonAct, eveningAct]
+      theme: "More itinerary coming soon",
+      activities: [
+        {
+          time: "Day Schedule",
+          title: "More itinerary coming soon",
+          description: `We are currently expanding our expert-curated paths for ${capDest}. Stay tuned!`,
+          cost: 0,
+          tip: "Check back later.",
+          priceUnavailable: true
+        }
+      ]
     });
   }
 
